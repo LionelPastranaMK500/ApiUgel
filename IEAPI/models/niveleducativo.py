@@ -1,29 +1,28 @@
+# IEAPI/models/niveleducativo.py (Refactorizado)
 from django.db import models
 from .institucionEducativa import InstitucionEducativa
+from .nivel_catalogo import NivelCatalogo
 
-class Niveleducativo(models.Model):
-    institucion = models.OneToOneField(
-        InstitucionEducativa,
-        on_delete=models.PROTECT,     # evita borrar la institución si tiene niveles
-        related_name="nivel"        # acceso: institucion.nivel
+class InstitucionNivel(models.Model):
+    """
+    Tabla intermedia que define qué niveles ofrece UNA institución específica.
+    Permite que una IE tenga solo Inicial, o Inicial + Primaria + Superior.
+    """
+    institucion = models.ForeignKey(
+        InstitucionEducativa, 
+        on_delete=models.CASCADE, 
+        related_name="niveles_configurados"
     )
-    nvl_inicial    = models.BooleanField(default=False)
-    nvl_primaria   = models.BooleanField(default=False)
-    nvl_secundaria = models.BooleanField(default=False)
-    nvl_superior   = models.BooleanField(default=False)
-    descripcion    = models.TextField(blank=False, default="")
+    nivel_tipo = models.ForeignKey(
+        NivelCatalogo, 
+        on_delete=models.PROTECT
+    )
+    fecha_activacion = models.DateField(auto_now_add=True)
+    es_activo = models.BooleanField(default=True)
 
     class Meta:
-        db_table = "nivel_educativo"
+        db_table = "institucion_nivel"
+        unique_together = ('institucion', 'nivel_tipo') # Evita duplicar el mismo nivel en la IE
 
     def __str__(self):
-        return f"Niveles de {self.institucion.nombre}"
-
-    @property
-    def niveles_activos(self) -> list[str]:
-        activos = []
-        if self.nvl_inicial:    activos.append("inicial")
-        if self.nvl_primaria:   activos.append("primaria")
-        if self.nvl_secundaria: activos.append("secundaria")
-        if self.nvl_superior:   activos.append("superior")
-        return activos
+        return f"{self.institucion.nombre} - {self.nivel_tipo.nombre}"

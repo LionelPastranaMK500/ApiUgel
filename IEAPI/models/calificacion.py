@@ -1,39 +1,38 @@
+# IEAPI/models/calificacion.py
 from django.db import models
-from django.conf import settings
 from decimal import Decimal
 from .evaluacion import Evaluacion
+from .matricula import Matricula
+from .escala_calificacion import ValorEscala 
 
 class Calificacion(models.Model):
     """
-    Nota de un estudiante en una evaluación específica.
+    Nota final encapsulada por alumno y evaluación.
+    Soporta notas numéricas (Superior) y literales (Básica).
     """
-    evaluacion = models.ForeignKey(Evaluacion, on_delete=models.PROTECT, related_name="calificaciones")
-    estudiante = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="calificaciones")
-    nota = models.DecimalField(max_digits=6, decimal_places=2)   # 0..puntaje_max
+    evaluacion = models.ForeignKey(Evaluacion, on_delete=models.PROTECT, related_name="notas")
+    # Vinculamos a la Matricula para asegurar que el alumno pertenece a la sección
+    matricula = models.ForeignKey(Matricula, on_delete=models.PROTECT, related_name="calificaciones")
+    
+    # Nota Numérica (Fallback y para Superior)
+    valor_numerico = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    
+    # Nota Literal (Para Inicial/Primaria/Secundaria)
+    valor_literal = models.ForeignKey(ValorEscala, on_delete=models.PROTECT, null=True, blank=True)
+    
     observado = models.BooleanField(default=False)
+    comentario_docente = models.TextField(blank=True)
     creado_en = models.DateTimeField(auto_now_add=True)
-    actualizado_en = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = "calificacion"
-        unique_together = (("evaluacion", "estudiante"),)
-        indexes = [
-            models.Index(fields=["estudiante"], name="idx_calif_estudiante"),
-            models.Index(fields=["evaluacion"], name="idx_calif_eval"),
-        ]
+        unique_together = (("evaluacion", "matricula"),)
 
     def __str__(self):
-        return f"{self.estudiante} → {self.evaluacion} = {self.nota}"
+        nota = self.valor_literal.codigo if self.valor_literal else self.valor_numerico
+        return f"{self.matricula.alumno.user.last_name} -> {nota}"
 
-    # --- Helpers de cálculo
     @property
-    def aporte_porcentual(self) -> Decimal:
-        """
-        Aporte de esta calificación al % del bimestre del curso.
-        Fórmula: (nota/puntaje_max) * peso_del_componente
-        """
-        comp = self.evaluacion.componente
-        if self.evaluacion.puntaje_max == 0:
-            return Decimal("0.00")
-        ratio = Decimal(self.nota) / Decimal(self.evaluacion.puntaje_max)
-        return (ratio * Decimal(comp.peso)).quantize(Decimal("0.01"))
+    def nota_final_display(self):
+        """Helper para que el Frontend no sufra eligiendo qué mostrar."""
+        return self.valor_literal.codigo if self.valor_literal else self.valor_numerico

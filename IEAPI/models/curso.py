@@ -1,23 +1,27 @@
+# IEAPI/models/curso.py
 from django.db import models
-from django.conf import settings
 from .seccion import Seccion
-from .asignatura import Asignatura
+from .malla_curricular import DetalleMalla
+from .asignacion_rol import PersonalPeriodo 
 
 class Curso(models.Model):
     """
-    Un curso (materia) que se dicta en una Sección durante un PeriodoLectivo.
+    Instancia real de una materia en un salón.
+    Une la malla con el docente responsable del periodo[cite: 148, 194].
     """
     seccion = models.ForeignKey(Seccion, on_delete=models.PROTECT, related_name="cursos")
-    asignatura = models.ForeignKey(Asignatura, on_delete=models.PROTECT, related_name="cursos")
-    docente = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="cursos_dictados")
-    estado = models.CharField(max_length=12, default="activo")  # activo/archivado
-    creado_en = models.DateTimeField(auto_now_add=True)
-    actualizado_en = models.DateTimeField(auto_now=True)
+    detalle_malla = models.ForeignKey(DetalleMalla, on_delete=models.PROTECT)
+    
+    docente_responsable = models.ForeignKey(
+        PersonalPeriodo, 
+        on_delete=models.PROTECT, 
+        limit_choices_to={'rol__nombre__icontains': 'Profesor'},
+        related_name="cursos_dictados"
+    )
 
     class Meta:
         db_table = "curso"
-        unique_together = (("seccion", "asignatura"),)
-        indexes = [models.Index(fields=["seccion"], name="idx_curso_seccion")]
+        unique_together = ('seccion', 'detalle_malla')
 
     def __str__(self):
-        return f"{self.asignatura} · {self.seccion}"
+        return f"{self.detalle_malla.asignatura.nombre} - {self.seccion}"

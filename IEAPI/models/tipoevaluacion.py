@@ -1,10 +1,9 @@
+# IEAPI/models/tipo_evaluacion.py
 from django.db import models
 
 class TipoEvaluacion(models.Model):
     """
-    Catálogo de tipos para clasificar componentes o evaluaciones.
-    Ejemplos de códigos:
-    autoevaluacion, videotest, tarea, entregable, examen_final, actitudes, participacion
+    Catálogo de tipos: Tarea, Examen, Participación.
     """
     codigo = models.SlugField(max_length=40, unique=True)
     nombre = models.CharField(max_length=80, unique=True)
