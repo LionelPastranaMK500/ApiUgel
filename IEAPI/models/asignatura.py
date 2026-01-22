@@ -3,15 +3,15 @@ from django.db import models
 
 class Asignatura(models.Model):
     """
-    Catálogo maestro de materias. 
-    Base inmutable para la construcción de mallas[cite: 115, 189].
+    Catálogo de materias. 
+    Corregido: Se quita unique=True del nombre para permitir colisiones entre niveles.
     """
-    nombre = models.CharField(max_length=120, unique=True)
-    codigo_sigla = models.CharField(max_length=10, unique=True, blank=True, null=True)
+    nombre = models.CharField(max_length=120) 
+    codigo_sigla = models.CharField(max_length=20, unique=True, help_text="ID único interno (ej: MAT-PRI-2025)")
 
     class Meta:
         db_table = "asignatura"
         ordering = ["nombre"]
 
     def __str__(self):
-        return self.nombre
+        return f"{self.nombre} ({self.codigo_sigla})"

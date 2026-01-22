@@ -3,12 +3,14 @@ from django.db import models
 from .seccion import Seccion
 from .malla_curricular import DetalleMalla
 from .asignacion_rol import PersonalPeriodo 
+from .periodoLectivo import PeriodoLectivo
 
 class Curso(models.Model):
     """
-    Instancia real de una materia en un salón.
-    Une la malla con el docente responsable del periodo[cite: 148, 194].
+    Instancia real de una materia.
+    Corregido: Se añade periodo directo para aislamiento de historial.
     """
+    periodo = models.ForeignKey(PeriodoLectivo, on_delete=models.PROTECT)
     seccion = models.ForeignKey(Seccion, on_delete=models.PROTECT, related_name="cursos")
     detalle_malla = models.ForeignKey(DetalleMalla, on_delete=models.PROTECT)
     

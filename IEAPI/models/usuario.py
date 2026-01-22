@@ -6,7 +6,7 @@ from .institucionEducativa import InstitucionEducativa
 class PerfilPersona(models.Model):
     # Vinculamos al User de Django pero extendemos la identidad peruana
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="perfil")
-    dni = models.CharField(max_length=8, unique=True)
+    dni = models.CharField(max_length=20, unique=True, help_text="DNI, Pasaporte o Carnet de Extranjería")
     fecha_nacimiento = models.DateField(null=True, blank=True)
     genero = models.CharField(max_length=1, choices=[('M', 'Masculino'), ('F', 'Femenino')], blank=True)
     
