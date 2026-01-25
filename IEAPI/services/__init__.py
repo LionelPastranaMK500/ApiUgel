@@ -16,6 +16,9 @@ from .promedio_service import calcular_promedio_final
 from .asistencia_service import registrar_asistencia_seccion
 from .finanzas_service import generar_deuda_estudiante
 from .consulta_service import listar_personal_administracion, listar_alumnos_administracion
+from .auditoria_service import registrar_evento_critico
+from .seguridad_service import validar_vinculo_institucional
+from .transicion_service import procesar_finalizacion_grado
 
 __all__ = [
     "inicializar_institucion_maestra",
@@ -26,5 +29,7 @@ __all__ = [
     "agregar_curso_a_malla_vigente", "proyectar_malla_a_seccion",
     "ejecutar_matricula", "configurar_esquema_evaluacion", "calcular_promedio_final",
     "registrar_asistencia_seccion", "generar_deuda_estudiante", "registrar_pago_efectivo",
-    "listar_personal_administracion", "listar_alumnos_administracion"
+    "listar_personal_administracion", "listar_alumnos_administracion", 
+    "registrar_evento_critico", "validar_vinculo_institucional",
+    "procesar_finalizacion_grado"
 ]
