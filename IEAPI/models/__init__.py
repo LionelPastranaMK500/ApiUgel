@@ -12,7 +12,7 @@ from .matricula import Matricula
 from .asignatura import Asignatura
 from .malla_curricular import MallaCurricular, DetalleMalla
 from .curso import Curso
-from .evaluacion import TipoEvaluacion, Evaluacion
+from .evaluacion import Evaluacion, TipoEvaluacion 
 from .escala_calificacion import EscalaCalificacion, ValorEscala
 from .componente_evaluacion import ComponenteEvaluacion
 from .calificacion import Calificacion
@@ -21,36 +21,14 @@ from .pago import ConceptoPago, ObligacionPago
 from .anuncio import Anuncio
 from .debate import DebateTema, DebatePost
 from .mensaje import Conversacion, Mensaje
+from .auditoria import LogAuditoria
 
 __all__ = [
-    "InstitucionEducativa",
-    "NivelCatalogo",
-    "InstitucionNivel",
-    "PeriodoLectivo",
-    "Grado",
-    "Seccion",
-    "PerfilPersona",
-    "AsignacionRol",
-    "Rol",
-    "PersonalPeriodo",
-    "Matricula",
-    "Asignatura",
-    "MallaCurricular",
-    "DetalleMalla",
-    "Curso",
-    "TipoEvaluacion",
-    "Evaluacion",
-    "EscalaCalificacion",
-    "ValorEscala",
-    "ComponenteEvaluacion",
-    "Calificacion",
-    "AsistenciaAlumno",
-    "AsistenciaPersonal",
-    "ConceptoPago",
-    "ObligacionPago",
-    "Anuncio",
-    "DebateTema",
-    "DebatePost",
-    "Conversacion",
-    "Mensaje",
+    "InstitucionEducativa", "NivelCatalogo", "InstitucionNivel", "PeriodoLectivo",
+    "Grado", "Seccion", "PerfilPersona", "AsignacionRol", "Rol", "PersonalPeriodo",
+    "Matricula", "Asignatura", "MallaCurricular", "DetalleMalla", "Curso",
+    "TipoEvaluacion", "Evaluacion", "EscalaCalificacion", "ValorEscala",
+    "ComponenteEvaluacion", "Calificacion", "AsistenciaAlumno", "AsistenciaPersonal",
+    "ConceptoPago", "ObligacionPago", "Anuncio", "DebateTema", "DebatePost",
+    "Conversacion", "Mensaje", "LogAuditoria"
 ]

@@ -1,5 +1,5 @@
 # IEAPI/services/__init__.py
-from .configuracion_service import inicializar_institucion_maestra
+from .configuracion_service import procesar_identidad_ie, obtener_detalle_ie
 from .usuario_service import (
     registrar_nuevo_perfil, actualizar_perfil, 
     obtener_perfil_por_slug, cambiar_estado_usuario, 
@@ -21,7 +21,6 @@ from .seguridad_service import validar_vinculo_institucional
 from .transicion_service import procesar_finalizacion_grado
 
 __all__ = [
-    "inicializar_institucion_maestra",
     "registrar_nuevo_perfil", "actualizar_perfil", "obtener_perfil_por_slug",
     "cambiar_estado_usuario", "verificar_disponibilidad_dni",
     "designar_personal_a_periodo", "proyectar_planilla_personal",
@@ -31,5 +30,6 @@ __all__ = [
     "registrar_asistencia_seccion", "generar_deuda_estudiante", "registrar_pago_efectivo",
     "listar_personal_administracion", "listar_alumnos_administracion", 
     "registrar_evento_critico", "validar_vinculo_institucional",
-    "procesar_finalizacion_grado"
+    "procesar_finalizacion_grado", "procesar_identidad_ie", "obtener_detalle_ie"
+    
 ]

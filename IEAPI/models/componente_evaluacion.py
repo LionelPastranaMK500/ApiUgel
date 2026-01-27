@@ -3,7 +3,7 @@ from django.db import models
 from decimal import Decimal
 from django.core.exceptions import ValidationError
 from .curso import Curso
-from .tipoevaluacion import TipoEvaluacion
+from .evaluacion import TipoEvaluacion
 
 class ComponenteEvaluacion(models.Model):
     """

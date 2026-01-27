@@ -1,25 +1,18 @@
-# IEAPI/services/configuracion_service.py
 from django.db import transaction
-from IEAPI.models import InstitucionEducativa, InstitucionNivel, NivelCatalogo
+from IEAPI.models import InstitucionEducativa
 
-def inicializar_institucion_maestra(datos_ie, codigos_niveles):
+def procesar_identidad_ie(datos_validados):
     """
-    Fase 3: Génesis. Configura la IE por primera vez.
-    Eliminamos 'created' por ser código muerto.
+    Fase 3: Operación atómica de identidad.
+    Garantiza integridad total en MySQL.
     """
     with transaction.atomic():
-        # 1. Identidad Inmutable
-        ie, _ = InstitucionEducativa.objects.update_or_create(
-            codigo_modular=datos_ie.get('codigo_modular'),
-            defaults=datos_ie
+        ie, created = InstitucionEducativa.objects.update_or_create(
+            codigo_modular=datos_validados.get('codigo_modular'),
+            defaults=datos_validados
         )
+        return ie, created
 
-        # 2. Activación de niveles
-        for cod in codigos_niveles:
-            nivel_tipo = NivelCatalogo.objects.get(codigo=cod)
-            InstitucionNivel.objects.get_or_create(
-                institucion=ie,
-                nivel_tipo=nivel_tipo
-            )
-            
-    return ie
+def obtener_detalle_ie():
+    """Retorna la única instancia de la institución en el sistema."""
+    return InstitucionEducativa.objects.first()

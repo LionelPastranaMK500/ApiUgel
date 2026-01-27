@@ -17,6 +17,7 @@ from .interaccion_serializers import (
     AnuncioSerializer, DebateTemaSerializer, 
     DebatePostSerializer, ConversacionSerializer, MensajeSerializer
 )
+from .configuracion_serializer import InstitucionIdentidadSerializer, IEResponseSerializer
 
 __all__ = [
     "InstitucionSerializer", "NivelCatalogoSerializer",
@@ -31,4 +32,5 @@ __all__ = [
     "ConceptoPagoSerializer", "ObligacionPagoSerializer",
     "AnuncioSerializer", "DebateTemaSerializer", 
     "DebatePostSerializer", "ConversacionSerializer", "MensajeSerializer",
+    "InstitucionIdentidadSerializer", "IEResponseSerializer"
 ]
