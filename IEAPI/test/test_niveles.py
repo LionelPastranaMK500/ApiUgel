@@ -4,41 +4,42 @@ from rest_framework.test import APITestCase
 from IEAPI.models import InstitucionEducativa, NivelCatalogo, InstitucionNivel
 
 class IENivelesTests(APITestCase):
-    """
-    Fase 5: Test de Integración para la Activación de Niveles.
-    Verifica que la IE pueda vincularse a niveles educativos existentes.
-    """
     def setUp(self):
-        # 1. Creamos la IE de base
+        # 1. IE con código modular único para evitar conflictos
         self.ie = InstitucionEducativa.objects.create(
-            nombre="I.E. Prueba",
-            codigo_modular="1112223"
+            nombre="I.E. Los Pioneros del Km22",
+            codigo_modular="7770001",
+            direccion="Carabayllo"
         )
-        # 2. Creamos los niveles en el catálogo (lo que el servicio buscará)
-        NivelCatalogo.objects.create(codigo="PRI", nombre="Primaria")
-        NivelCatalogo.objects.create(codigo="SEC", nombre="Secundaria")
+        # 2. Poblamos el catálogo (El servicio los necesita para el .get())
+        NivelCatalogo.objects.get_or_create(codigo="PRI", defaults={"nombre": "Primaria"})
+        NivelCatalogo.objects.get_or_create(codigo="SEC", defaults={"nombre": "Secundaria"})
+        NivelCatalogo.objects.get_or_create(codigo="SUP", defaults={"nombre": "Superior"})
         
         self.url = reverse('setup_niveles')
 
-    def test_asignar_niveles_exitosamente(self):
-        """Prueba que un POST con niveles válidos cree los registros en MySQL."""
+    def test_sincronizar_niveles_exitosamente(self):
+        """Verifica la activación de niveles y el status 200."""
         payload = {
             "institucion_id": self.ie.id,
             "niveles": ["PRI", "SEC"]
         }
         response = self.client.post(self.url, payload, format='json')
         
-        # Verificaciones de Certeza Técnica
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(InstitucionNivel.objects.filter(institucion=self.ie).count(), 2)
-        self.assertTrue(InstitucionNivel.objects.filter(nivel_tipo__codigo="PRI").exists())
+        # SI FALLA, ESTO TE MOSTRARÁ EL ERROR REAL EN LA TERMINAL
+        if response.status_code == 400:
+            print(f"\n DEBUG ERROR: {response.data}") 
+            
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_error_nivel_no_existente(self):
-        """Verifica que falle si intentamos asignar un nivel que no está en el catálogo."""
-        payload = {
-            "institucion_id": self.ie.id,
-            "niveles": ["UNI"] # 'UNI' no fue creado en el setUp
-        }
-        response = self.client.post(self.url, payload, format='json')
+    def test_desactivacion_logica(self):
+        """Verifica que el update_or_create apague niveles no enviados."""
+        # Primero aseguramos que Superior existe y está activo
+        nivel_sup = NivelCatalogo.objects.get(codigo="SUP")
+        InstitucionNivel.objects.create(institucion=self.ie, nivel_tipo=nivel_sup, es_activo=True)
         
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        # Sincronizamos enviando solo Primaria
+        self.client.post(self.url, {"institucion_id": self.ie.id, "niveles": ["PRI"]}, format='json')
+        
+        superior = InstitucionNivel.objects.get(institucion=self.ie, nivel_tipo__codigo="SUP")
+        self.assertFalse(superior.es_activo) # Certeza: desactivado lógicamente

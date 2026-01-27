@@ -27,7 +27,7 @@ class IEAsignarNivelesView(APIView):
             )
             return Response({
                 "mensaje": "Sincronización de niveles completada",
-                "activos": len([n for n in niveles_procesados if n.es_activa])
+                "activos": len([n for n in niveles_procesados if n.es_activo])
             }, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
