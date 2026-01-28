@@ -20,6 +20,7 @@ from .auditoria_service import registrar_evento_critico
 from .seguridad_service import validar_vinculo_institucional
 from .transicion_service import procesar_finalizacion_grado
 from .niveles_service import obtener_niveles_institucion, gestionar_niveles_institucion
+from .periodo_service import listar_periodos_por_ie, procesar_periodo_lectivo, obtener_periodo_detalle
 
 __all__ = [
     "registrar_nuevo_perfil", "actualizar_perfil", "obtener_perfil_por_slug",
@@ -33,5 +34,5 @@ __all__ = [
     "registrar_evento_critico", "validar_vinculo_institucional",
     "procesar_finalizacion_grado", "procesar_identidad_ie", "obtener_detalle_ie",
     "obtener_niveles_institucion", "gestionar_niveles_institucion"
-    
+    ,"listar_periodos_por_ie", "procesar_periodo_lectivo", "obtener_periodo_detalle"
 ]

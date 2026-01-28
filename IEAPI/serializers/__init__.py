@@ -1,6 +1,6 @@
 # IEAPI/serializers/__init__.py
 from .institucion_serializers import InstitucionSerializer, NivelCatalogoSerializer
-from .periodo_serializers import PeriodoLectivoSerializer
+from .periodo_serializers import PeriodoSimpleSerializer,PeriodoFullSerializer
 from .estructura_serializers import GradoSerializer, SeccionSerializer
 from .malla_serializers import MallaCurricularSerializer, DetalleMallaSerializer
 from .curso_serializers import CursoSerializer
@@ -21,8 +21,7 @@ from .configuracion_serializer import InstitucionIdentidadSerializer, IEResponse
 from .niveles_serializer import InstitucionNivelReadSerializer, AsignarNivelesSerializer
 
 __all__ = [
-    "InstitucionSerializer", "NivelCatalogoSerializer",
-    "PeriodoLectivoSerializer", "GradoSerializer", "SeccionSerializer",
+    "InstitucionSerializer", "NivelCatalogoSerializer","PeriodoSimpleSerializer", "PeriodoFullSerializer", "GradoSerializer", "SeccionSerializer",
     "MallaCurricularSerializer", "DetalleMallaSerializer",
     "CursoSerializer", "MatriculaSerializer",
     "PerfilPersonaSerializer", "RolSerializer", 
